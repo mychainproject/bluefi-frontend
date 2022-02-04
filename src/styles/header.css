@@ -196,7 +196,7 @@
   bottom: 0;
   background-color: #16151a;
   z-index: 99;
-  width: 280px;
+  /* width: 280px; */
   padding: 25px 25px 0;
   transform: translate3d(281px, 0, 0);
   transition: transform 0.5s ease;

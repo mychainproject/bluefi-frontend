@@ -368,6 +368,20 @@ function AuthorPage() {
                     My Collection
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${
+                      tab !== "setting" || account !== id ? "active" : ""
+                    }`}
+                    data-toggle="tab"
+                    href="#tab-collection"
+                    role="tab"
+                    aria-controls="tab-collection"
+                    aria-selected={account !== id}
+                  >
+                    My NFT
+                  </a>
+                </li>
                 {/* <li className="nav-item">
                   <a
                     className="nav-link"

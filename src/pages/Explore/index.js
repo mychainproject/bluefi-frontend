@@ -111,6 +111,7 @@ function Explore() {
   ]);
 
   return (
+    
     <main className="main">
       <div className="p-0">
 

@@ -1,28 +1,28 @@
-import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {useHistory} from "react-router-dom";
-import {useWeb3React} from "@web3-react/core";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useWeb3React } from "@web3-react/core";
 import NFTDropzone from "../../components/Dropzone";
 import Switch from "react-switch";
-import {firestore} from "../../firebase";
-import {toast} from "react-toastify";
-import {NFTStorage} from "nft.storage";
-import {NFTStorageKey} from "../../constants/index";
+import { firestore } from "../../firebase";
+import { toast } from "react-toastify";
+import { NFTStorage } from "nft.storage";
+import { NFTStorageKey } from "../../constants/index";
 import ipfs from "utils/ipfsApi.js";
 import "styles/create.css";
 import moment from "moment";
 import ReactSlider from "react-slider";
-import {parseUnits} from "@ethersproject/units";
-import {Contract} from "@ethersproject/contracts";
-import {NFT_ADDRESS, NFT_MARKET_ADDRESS, PaymentList} from "../../constants";
+import { parseUnits } from "@ethersproject/units";
+import { Contract } from "@ethersproject/contracts";
+import { NFT_ADDRESS, NFT_MARKET_ADDRESS, PaymentList } from "../../constants";
 import Market_INFO from "artifacts/contracts/Marketplace.sol/FlokinomicsNFTMarketplace.json";
 import NFT_INFO from "artifacts/contracts/FlokinomicsNFT.sol/FlokinomicsNFT.json";
-import {algolia} from "../../utils/algolia";
+import { algolia } from "../../utils/algolia";
 
-const client = new NFTStorage({token: NFTStorageKey});
+const client = new NFTStorage({ token: NFTStorageKey });
 
-function Create() {
-    const {library, account} = useWeb3React();
+function Createcollection() {
+    const { library, account } = useWeb3React();
     const [user, setUser] = useState({
         account: account,
         avatar: "assets/img/avatars/avatar.jpg",
@@ -43,6 +43,7 @@ function Create() {
     const [file, setFile] = useState(null);
     const [category, setCategory] = useState("art");
     const [name, setName] = useState("");
+    const [symbol, setSymbol] = useState("");
     const [royalties, setRoyalties] = useState(7);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
@@ -301,7 +302,7 @@ function Create() {
             const userInfo = (
                 await firestore.collection("users").doc(user_id).get()
             ).data();
-            dispatch({type: "SET_PROFILE", userInfo});
+            dispatch({ type: "SET_PROFILE", userInfo });
             setUser(userInfo);
         }
     };
@@ -310,7 +311,8 @@ function Create() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account]);
     return (
-        <main className="buyFlokin" style={{paddingTop: 90}}>
+        <main className="buyFlokin" style={{ paddingTop: 90 }}>
+
             <div className="container">
                 <div className="row">
                     <div className="col-12 col-lg-6 pr-1 createPart">
@@ -352,7 +354,7 @@ function Create() {
 
                         <div className="sign__group">
                             <h2 className="createStepLabel mb-20">NFT Type</h2>
-                            <select
+                            {/* <select
                                 id="type"
                                 name="type"
                                 className="sign__select inputBg"
@@ -362,41 +364,101 @@ function Create() {
                                 <option value="image">Image</option>
                                 <option value="audio">Audio</option>
                                 <option value="video">Video</option>
-                            </select>
+                            </select> */}
+                            <div className="sign__group">
+                                <input
+                                    // id="name"
+                                    type="text"
+                                    // name="name"
+                                    className="sign__input "
+                                    placeholder="Name"
+                                    // value={name} 
+                                    onChange={(e) => setName(e.target.value)}
+                                    style={{ border: '1px solid #FFFFFF33' }}
+                                />
+                            </div>
+                            <div className="sign__group">
+
+                                <input
+                                    id="Symbol"
+                                    type="text"
+                                    className="sign__input "
+                                    placeholder="Symbol"
+                                    value={Symbol}
+                                    onChange={(e) => setName(e.target.value)}
+                                    style={{ border: '1px solid #FFFFFF33' }}
+                                />
+                            </div>
+                            <div className="sign__group">
+                                <label for="JSON" className="sign__input" style={{ border: '1px solid #FFFFFF33', display: "flex", alignItems: "center" }}>upload JSON_file</label>
+                                <input
+                                    id="JSON"
+                                    directory=""
+                                    className="sign__input "
+                                    style={{ border: '1px solid #FFFFFF33', display: "none" }}
+                                    webkitdirectory=""
+                                    type="file" />
+                            </div>
+                            <div className="sign__group">
+                                <label className="sign__label" htmlFor="royalties">
+                                    Starting range
+                                </label>
+                                <button className="royaltyBtn">{royalties}</button>
+
+                                <ReactSlider
+                                    className="horizontal-slider"
+                                    thumbClassName="example-thumb"
+                                    trackClassName="example-track"
+                                    defaultValue={7}
+                                    value={royalties}
+                                    onChange={(e) => {
+                                        setRoyalties(e);
+                                    }}
+                                    min={0}
+                                    max={100}
+                                    renderTrack={(props, state) => (
+                                        <div {...props}>{state.valueNow}</div>
+                                    )} //custom track
+                                />
+                            </div>
+                            <div className="sign__group">
+                                <label className="sign__label" htmlFor="royalties">
+                                    Ending range
+                                </label>
+                                <button className="royaltyBtn">{royalties}</button>
+
+                                <ReactSlider
+                                    className="horizontal-slider"
+                                    thumbClassName="example-thumb"
+                                    trackClassName="example-track"
+                                    defaultValue={7}
+                                    value={royalties}
+                                    onChange={(e) => {
+                                        setRoyalties(e);
+                                    }}
+                                    min={0}
+                                    max={100}
+                                    renderTrack={(props, state) => (
+                                        <div {...props}>{state.valueNow}</div>
+                                    )} //custom track
+                                />
+                            </div>
+                            <div className="sign__group">
+                                <label for="files" className="sign__input" style={{ border: '1px solid #FFFFFF33', display: "flex", alignItems: "center" }}>Upload Image</label>
+                                <input
+                                    id="files"
+                                    type="file"
+                                    accept="image/*"
+                                    // name="name"
+                                    className="sign__input"
+
+                                    // style="display:none"
+                                    onChange={(e) => setName(e.target.value)}
+                                    style={{ border: '1px solid #FFFFFF33', display: "none" }}
+                                />
+                            </div>
                         </div>
 
-                        <div className="sign__group">
-                            <select
-                                id="category"
-                                name="category"
-                                className="sign__select"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                            >
-                                <option>Category</option>
-                                <option value="art">Art</option>
-                                <option value="music">Music</option>
-                                <option value="film">Film</option>
-                                <option value="sports">Sports</option>
-                                <option value="education">Education</option>
-                                <option value="photography">Photography</option>
-                                <option value="games">Games</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <div className="sign__group">
-                            <select
-                                id="type"
-                                name="type"
-                                className="sign__select inputBg"
-                                onChange={(e) => setType(e.target.value)}
-                            >
-                                <option value="image">Image</option>
-                                <option value="audio">Audio</option>
-                                <option value="video">Video</option>
-                            </select>
-                        </div>
                     </div>
                     <div className="col-12 col-lg-6  pr-1 createPart">
                         <h2 className="createStepLabel">Information</h2>
@@ -409,108 +471,92 @@ function Create() {
                                 placeholder="Title"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                style={{border: '1px solid #FFFFFF33'}}
+                                style={{ border: '1px solid #FFFFFF33' }}
                             />
                         </div>
 
                         <div className="sign__group">
-              <textarea
-                  id="description"
-                  name="description"
-                  className="sign__textarea"
-                  placeholder="Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  style={{border: '1px solid #FFFFFF33'}}
-              ></textarea>
+                            <textarea
+                                id="description"
+                                name="description"
+                                className="sign__textarea"
+                                placeholder="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                style={{ border: '1px solid #FFFFFF33' }}
+                            ></textarea>
                         </div>
-                        <div class="mt-50">
-                            <h2 className="createStepLabel">Sale & Price</h2>
-                        </div>
+                        <br />
                         <div className="sign__group">
-                            <label className="sign__label mr-3" htmlFor="sale">
-                                List for Sale
+                            <label className="sign__label" htmlFor="royalties">
+                                Royalties
                             </label>
-                            <Switch
-                                onChange={() => {
-                                    setIsSale(!isSale);
+                            <button className="royaltyBtn">{royalties}%</button>
+                            <ReactSlider
+                                className="horizontal-slider"
+                                thumbClassName="example-thumb"
+                                trackClassName="example-track"
+                                defaultValue={7}
+                                value={royalties}
+                                onChange={(e) => {
+                                    setRoyalties(e);
                                 }}
-                                checked={isSale}
-                                height={26}
-                                class="createListSwitch"
+                                min={1}
+                                max={20}
+                                renderTrack={(props, state) => (
+                                    <div {...props}>{state.valueNow}</div>
+                                )} //custom track
                             />
                         </div>
 
-                <div className="sign__group">
-                    <label className="sign__label" htmlFor="royalties">
-                        Royalties
-                    </label>
-                    <button className="royaltyBtn">{royalties}%</button>
-                    <ReactSlider
-                        className="horizontal-slider"
-                        thumbClassName="example-thumb"
-                        trackClassName="example-track"
-                        defaultValue={7}
-                        value={royalties}
-                        onChange={(e) => {
-                            setRoyalties(e);
-                        }}
-                        min={1}
-                        max={20}
-                        renderTrack={(props, state) => (
-                            <div {...props}>{state.valueNow}</div>
-                        )} //custom track
-                    />
-                </div>
-
-                {isSale && (
-                    <div className="sign__group">
-
-                        <select
-                            id="saleType"
-                            name="saleType"
-                            className="sign__select "
-                            value={saleType}
-                            onChange={(e) => setSaleType(e.target.value)}
-                        >
-                            <option>Sale Type</option>
-                            <option value="fix">Fixed</option>
-                            <option value="auction">Auction</option>
-                        </select>
-
-                        <div className="sign__group">
-                            <input
-                                id="price"
-                                type="number"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                name="price"
-                                className="sign__input"
-                                placeholder="BNB Price"
-                            />
-                        </div>
-                        {saleType === "auction" && (
+                        {isSale && (
                             <div className="sign__group">
+
                                 <select
-                                    id="length"
-                                    name="length"
-                                    className="sign__select mt-0"
-                                    value={auctionLength}
-                                    onChange={(e) => setAuctionLength(e.target.value)}
+                                    id="saleType"
+                                    name="saleType"
+                                    className="sign__select "
+                                    value={saleType}
+                                    onChange={(e) => setSaleType(e.target.value)}
                                 >
-                                    <option>Auction Length</option>
-                                    <option value="1">1 hour</option>
-                                    <option value="12">12 hours</option>
-                                    <option value="24">24 hours</option>
-                                    <option value="72">3 days</option>
-                                    <option value="168">7 days</option>
+                                    <option>Sale Type</option>
+                                    <option value="fix">Fixed</option>
+                                    <option value="auction">Auction</option>
                                 </select>
+
+                                <div className="sign__group">
+                                    <input
+                                        id="price"
+                                        type="number"
+                                        value={price}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        name="price"
+                                        className="sign__input"
+                                        placeholder="BNB Price"
+                                    />
+                                </div>
+                                {saleType === "auction" && (
+                                    <div className="sign__group">
+                                        <select
+                                            id="length"
+                                            name="length"
+                                            className="sign__select mt-0"
+                                            value={auctionLength}
+                                            onChange={(e) => setAuctionLength(e.target.value)}
+                                        >
+                                            <option>Auction Length</option>
+                                            <option value="1">1 hour</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="24">24 hours</option>
+                                            <option value="72">3 days</option>
+                                            <option value="168">7 days</option>
+                                        </select>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
-                )}
-                    </div>
-                    </div>
+                </div>
                 <div className="col-12 text-center mb-100">
                     <button
                         type="button"
@@ -529,4 +575,4 @@ function Create() {
         ;
 }
 
-export default Create;
+export default Createcollection;

@@ -144,6 +144,23 @@
   cursor: pointer;
   font-family: "Inter", sans-serif;
 }
+.Header_drp {
+  background: url("../assets/img/Iconionic-ios-arrow-dropdown.png") no-repeat
+    center right 20px #222227;
+  background-size: 18px auto;
+  border: 1px solid #FFFFFF33;
+  border-radius: 12px;
+  height: 35px;
+  position: relative;
+  color: #fff;
+  font-size: 16px;
+  /* width: 100%; */
+  width: 180px;
+  padding: 0 20px;
+  margin-top: 25px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+}
 .css-yk16xz-control {
   background-color: hsl(240deg 7% 14%) !important;
   border: none !important;

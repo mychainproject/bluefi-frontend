@@ -26,8 +26,6 @@ import { toast } from "react-toastify";
 import Countdown from "react-countdown";
 import moment from "moment";
 import axios from "axios";
-import bluefiabi from "../../services/smart-contract/BLEUFINFT"
-import Web3 from "web3"
 // import { BigNumber } from "ethers";
 
 const breadcrumb = [
@@ -35,11 +33,7 @@ const breadcrumb = [
   { title: "Item", page: "/item" },
 ];
 
-function Item() {const web3 = new Web3(Web3.givenProvider || window.etherum)
-  const newContract = "0xA20B92E0a08B6c32E81958A4955F138589C2084a"
-  const abiFile = bluefiabi.abi
-  const contractInstance = new web3.eth.Contract(abiFile,newContract)
-
+function Item() {
   const { library, active, account } = useWeb3React();
   const { id } = useParams();
   const [price, setPrice] = useState(0);
@@ -255,15 +249,6 @@ function Item() {const web3 = new Web3(Web3.givenProvider || window.etherum)
             );
             await res.wait();
           }
-          let accounts = await web3.eth.getAccounts()
-          const hash = await contractInstance.methods.getMessageHash(
-            1,
-            0,
-            item.tokenURI  
-          ).call()
-          const encodedhash = await contractInstance.methods.getEthSignedMessageHash(hash).call()
-          const signature = await web3.eth.sign(encodedhash, accounts[0])
-          console.log(signature)
           await firestore
             .collection("nfts")
             .doc(id)
@@ -271,14 +256,12 @@ function Item() {const web3 = new Web3(Web3.givenProvider || window.etherum)
               price: parseFloat(newPrice),
               saleType: "fix",
               isSale: true,
-              signature:signature,
               time: 0,
             });
           setItem({
             ...item,
             price: parseFloat(newPrice),
             saleType: "fix",
-            signature:signature,
             isSale: true,
             time: 0,
           });

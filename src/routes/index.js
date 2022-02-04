@@ -24,6 +24,7 @@ import Profile from "pages/Profile";
 import Admin from "pages/Admin";
 import BuyFlokin from '../pages/BuyFlokin'
 import About from '../pages/About'
+import Createcollection from "../pages/createCollection"
 
 function Routes(props) {
   return (
@@ -45,6 +46,7 @@ function Routes(props) {
           <Route path="/creator/:id" component={Creator} />
           <Route path="/collection" component={Collection} />
           <Route path="/create" component={Create} />
+          <Route path="/CreateCollection" component={Createcollection} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/forgot" component={Forgot} />

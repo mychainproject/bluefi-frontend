@@ -90,6 +90,7 @@ function Product(props) {
     setFollow(props.data.likes);
   }, [props.data]);
   return (
+    
     <div className="product">
       {type === "image" && (
         <Link

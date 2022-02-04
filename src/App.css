@@ -546,7 +546,7 @@ body {
   /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   font-family: "Inter", sans-serif;
   /* font-size: 14px; */
-  /* width: 80px; */
+  /* width: 200px; */
 
   background: #00CEFF33 0 0 no-repeat padding-box;
   border: 2px solid #00CEFF;
@@ -639,6 +639,10 @@ body {
 }
 
 .sign__select {
+  background: url("assets/img/down-arrow.png") no-repeat center right 20px !important;
+  background-color: #323f52 !important;
+}
+.Header_drp {
   background: url("assets/img/down-arrow.png") no-repeat center right 20px !important;
   background-color: #323f52 !important;
 }
@@ -850,7 +854,10 @@ body {
   margin-top: 0 !important;
   font-size: 14px !important;
 }
-
+.Header_drp {
+  margin-top: 0 !important;
+  font-size: 14px !important;
+}
 .main__filter-search input {
   background: #323f52 !important;
 }

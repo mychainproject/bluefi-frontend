@@ -9,7 +9,7 @@ import Switch from "react-switch";
 
 import "styles/header.css";
 import EthBalance from "components/EthBalance";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, withRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { firestore } from "../../firebase";
 import { toast } from "react-toastify";
@@ -32,6 +32,8 @@ function Header() {
 
   // eslint-disable-next-line no-unused-vars
   const [wrongNetwork, setWrongNetwork] = useState(false);
+  const [value, setValue] = useState("create");
+
   const [user, setUser] = useState({
     account: account,
     avatar: "assets/img/avatars/avatar.jpg",
@@ -50,10 +52,10 @@ function Header() {
 
   const fetcher =
     (library) =>
-    (...args) => {
-      const [method, ...params] = args;
-      return library[method](...params);
-    };
+      (...args) => {
+        const [method, ...params] = args;
+        return library[method](...params);
+      };
   // eslint-disable-next-line no-unused-vars
   const { data: balance } = useSWR(["getBalance", account, "latest"], {
     fetcher: fetcher(library),
@@ -74,7 +76,7 @@ function Header() {
       await activate(injectedConnector, (err) => console.log(err));
       window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId:'0x38' }],
+        params: [{ chainId: '0x38' }],
       })
     }
 
@@ -120,6 +122,24 @@ function Header() {
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager || !!activatingConnector);
 
+  //  const Createbutton = () => {
+  //   history.push("/Create");
+  //   console.log("tttttttttttttttttttttttttttttttttt");
+  // }
+
+  const headerfun = (e) => {
+    switch (e) {
+      case "CreateCollection":
+        history.push("/createcollection")
+        break;
+      case "create":
+        history.push("/create")
+        break;
+      default:
+        history.push("/")
+    }
+
+  }
   return (
     <header className="header">
       <div className="header__content">
@@ -129,15 +149,15 @@ function Header() {
           </Link>
           <div className="search-outline d-flex justify-content-center align-items-center ml-5">
             <input
-            type="text"
-            placeholder="Search..."
-            className="search-input"
+              type="text"
+              placeholder="Search..."
+              className="search-input"
             // value={searchText}
             // onChange={(e) => handleSearch(e)}
             />
-            <button style={{color: 'white', opacity: '.8'}} className="pr-3">
+            <button style={{ color: 'white', opacity: '.8' }} className="pr-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
               </svg>
             </button>
           </div>
@@ -156,6 +176,7 @@ function Header() {
                 Home
               </Link>
             </li>
+
             <li className="header__nav-item">
               <Link
                 className="header__nav-link"
@@ -168,7 +189,7 @@ function Header() {
                 Market
               </Link>
             </li>
-            <li className="header__nav-item">
+            {/* <li className="header__nav-item">
               <Link
                 className="header__nav-link"
                 to="/create"
@@ -179,11 +200,29 @@ function Header() {
                 Create
               </Link>
             </li>
+            <li>
+              <Link
+                className="header__nav-link headerActive"
+                to="/CreateCollection"
+                role="button"
+                id="dropdownMenuHome"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                CreateCollection
+              </Link>
+            </li> */}
             <li className="header__nav-item">
               <Link to="/creators" className="header__nav-link">
                 Creators
               </Link>
             </li>
+            <div className="header__nav-item headerActive">
+              <select className="Header_drp header__nav-link" onChange={(e) => headerfun(e.target.value)}>
+                <option value="create" >Create</option>
+                <option value="CreateCollection" >CreateCollection</option>
+              </select>
+            </div>
             <li className="header__nav-item d-none">
               <Link to="/about" className="header__nav-link">
                 About
@@ -215,9 +254,8 @@ function Header() {
           {active ? (
             <div className="header__action header__action--profile">
               <Link
-                className={`header__profile-btn ${
-                  user.nickName ? "header__profile-btn--verified" : ""
-                }`}
+                className={`header__profile-btn ${user.nickName ? "header__profile-btn--verified" : ""
+                  }`}
                 to="#"
                 role="button"
                 id="dropdownMenuProfile"
@@ -281,12 +319,14 @@ function Header() {
             </div>
           )}
 
+
           <div
             className="header__action header__action--signin"
             id="connectLarge"
           >
+
             <button
-              className="header__action-btn roundedHeaderButton"
+              className="header__action-btn roundedHeaderButton "
               onClick={connectWallet}
             >
               {account ? "DISCONNECT WALLET" : "CONNECT WALLET"}
@@ -341,4 +381,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default withRouter(Header);
