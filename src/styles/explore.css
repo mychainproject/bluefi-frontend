@@ -1,0 +1,173 @@
+.search-content {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.search-bar {
+  padding-bottom: 37px;
+  border-bottom: 2px solid #767d8f;
+}
+.search-outline {
+  /* width: 303px; */
+  /* height: 50px; */
+  padding: 10px 5px;
+  padding-left: 10px;
+
+  background: #28354c 0% 0% no-repeat padding-box !important;
+  border: 1px solid #EBEBEB27;
+  border-radius: 3px;
+  opacity: 1;
+}
+
+.search-outlinee {
+  /* width: 303px; */
+  height: 70px;
+  padding: 10px 5px;
+  padding-left: 20px;
+
+  background: var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box;
+  border: 2px solid var(--unnamed-color-ebebeb);
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 2px solid #EBEBEB;
+  border-radius: 9px;
+  opacity: 1;
+}
+
+.email-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: #3772ff;
+}
+.search-input {
+  border: none;
+  outline: none;
+  width: 270px;
+  color: white;
+
+  background: #28354c 0% 0% no-repeat padding-box !important;
+}
+
+.explorerPanel {
+  margin-left: 0!important;
+}
+.explorerRight {
+  padding: 10px 80px 10px 50px ;
+  /* max-height: 500px; */
+}
+
+.explorerHead {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .explorerHead {
+    display: block!important;
+  }
+}
+.search-inputt {
+  border: none;
+  outline: none;
+  height: 30px;
+  width: 100%;
+  letter-spacing: 0.6px;
+  color: #000000;
+  /* opacity: 0.5; */
+  font-size: 30px;
+
+  background: var(--unnamed-color-000000) 0% 0% no-repeat padding-box;
+  background: white 0% 0% no-repeat padding-box !important;
+}
+
+.light .search-input {
+  background-color: white;
+  color: black;
+}
+
+.search-input::placeholder {
+  color: white !important;
+  opacity: .8 !important;
+}
+.range__label {
+  margin-bottom: 20px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #b1b5c3;
+}
+
+.light .range__label {
+  color: black;
+}
+
+.explore__select {
+  background: url("../assets/img/Iconionic-ios-arrow-dropdown.png") no-repeat
+    center right 20px #323f52;
+  background-size: 18px auto;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  height: 46px;
+  position: relative;
+  color: #fff;
+  font-size: 16px;
+  width: 100%;
+  padding: 0 20px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+}
+.reset {
+  font-size: 15px;
+  font-weight: 700;
+  color: #b1b5c3;
+  border-top: 1px solid #767d8f;
+  padding-top: 20px;
+}
+.reset:hover {
+  color: #3772ff;
+}
+​.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  background: white;
+  outline: none;
+  opacity: 0.7;
+  border-radius: 8px;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.light .slider {
+  background: #323f52;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 13px;
+  background: #3772ff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04aa6d;
+  cursor: pointer;
+}

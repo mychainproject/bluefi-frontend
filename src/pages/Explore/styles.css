@@ -1,0 +1,207 @@
+
+.praktyka{
+  padding-bottom: 30px;
+  color: #fff
+}
+.praktyka h4{
+  cursor: pointer;
+  /* color:#c0fee8; */
+  /* text-transform: uppercase; */
+  /padding-left: 30px;
+  padding-bottom: 7px;
+  border-bottom: 1.5px solid #707070;
+  transition: .5s ease all;
+  position: relative;
+
+}
+.praktyka h4 span{
+  color: #fff;
+  /* background: #c0fee8; */
+  color: #2d0028;
+height: 14px;
+  margin-right: 5px;
+  transition: .3s ease all;
+  width: 10px;
+  display: inline-block;
+  text-align: center
+}
+.praktyka h4::after{
+  content: "";
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-left: 1px #fff solid;
+  border-bottom: 1px #fff solid;
+  transform: rotate(-45deg);
+  right: 0;
+  bottom: 15px;
+  transition: .3s ease all
+}
+.praktyka-content{
+  display: none;
+  margin-top: 30px;
+  /padding: 30px;
+  /background: #c0fee8;
+  /color: #2d0028;
+}
+.praktyka-content h5{
+letter-spacing: 1px;
+border-bottom: 1px rgba(255,255,255,.5) solid;
+padding-bottom: 7px;
+margin-bottom: 1em;
+
+}
+
+.praktyka.opened .praktyka-content{
+display: block
+}
+.praktyka .links-list .item-list{
+padding: 0;
+border: none
+}
+.praktyka:hover h4, .praktyka.opened h4{
+/* border-bottom-color: #c0fee8; */
+transition: 1s ease all;
+letter-spacing: 1px;
+color: #fff
+}
+.praktyka:hover h4 span, .praktyka.opened h4 span{
+/padding: 3px 10px;
+width: 30px;
+transition: 1s ease all;
+letter-spacing: 0;
+background: #fff
+}
+.praktyka.opened h4::after{
+transform: rotate(135deg);
+transition: .3s ease all
+}
+.praktyka.opened .praktyka-content{
+  display: block
+}
+.praktyka .links-list .item-list{
+  padding: 0;
+  border: none
+}
+.praktyka:hover h4, .praktyka.opened h4{
+  /* border-bottom-color: #c0fee8; */
+  transition: 1s ease all;
+  letter-spacing: 1px;
+  color: #fff
+}
+.praktyka:hover h4 span, .praktyka.opened h4 span{
+  padding: 3px 10px;
+  width: 30px;
+  transition: 1s ease all;
+  letter-spacing: 0;
+  background: #fff
+}
+.praktyka.opened h4::after{
+  transform: rotate(135deg);
+  transition: .3s ease all
+}
+
+
+.praktyka{
+    padding-bottom: 30px;
+    color: #fff
+}
+.praktyka h4{
+    cursor: pointer;
+    /* color:#c0fee8; */
+    /* text-transform: uppercase; */
+    /padding-left: 30px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #707070;
+    transition: .5s ease all;
+    position: relative;
+	
+}
+.praktyka h4 span{
+    color: #fff;
+    /* background: #c0fee8; */
+    color: #2d0028;
+	height: 14px;
+    margin-right: 5px;
+    transition: .3s ease all;
+    width: 10px;
+    display: inline-block;
+    text-align: center
+}
+.praktyka h4::after{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-left: 1px #fff solid;
+    border-bottom: 1px #fff solid;
+    transform: rotate(-45deg);
+    right: 0;
+    bottom: 15px;
+    transition: .3s ease all
+}
+.praktyka-content{
+    display: none;
+    margin-top: 30px;
+    /padding: 30px;
+    /background: #c0fee8;
+    /color: #2d0028;
+}
+.praktyka-content h5{
+	letter-spacing: 1px;
+	border-bottom: 1px rgba(255,255,255,.5) solid;
+	padding-bottom: 7px;
+	margin-bottom: 1em;
+	
+}
+
+.praktyka.opened .praktyka-content{
+  display: block
+}
+.praktyka .links-list .item-list{
+  padding: 0;
+  border: none
+}
+.praktyka:hover h4, .praktyka.opened h4{
+  /* border-bottom-color: #c0fee8; */
+  transition: 1s ease all;
+  letter-spacing: 1px;
+  color: #fff
+}
+.praktyka:hover h4 span, .praktyka.opened h4 span{
+  /padding: 3px 10px;
+  width: 30px;
+  transition: 1s ease all;
+  letter-spacing: 0;
+  background: #fff
+}
+.praktyka.opened h4::after{
+  transform: rotate(135deg);
+  transition: .3s ease all
+}
+.praktyka.opened .praktyka-content{
+    display: block
+}
+.praktyka .links-list .item-list{
+    padding: 0;
+    border: none
+}
+.praktyka:hover h4, .praktyka.opened h4{
+    /* border-bottom-color: #c0fee8; */
+    transition: 1s ease all;
+    letter-spacing: 1px;
+    color: #fff
+}
+.praktyka:hover h4 span, .praktyka.opened h4 span{
+    /padding: 3px 10px;
+    width: 30px;
+    transition: 1s ease all;
+    letter-spacing: 0;
+    background: #fff
+}
+ .praktyka.opened h4::after{
+    transform: rotate(135deg);
+    transition: .3s ease all
+}
