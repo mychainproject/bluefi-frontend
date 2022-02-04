@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 
 const App = () => {
 
-
   const [authenticated, setAuthenticated] = useState(false);
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
