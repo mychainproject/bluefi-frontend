@@ -26,6 +26,8 @@ import { toast } from "react-toastify";
 import Countdown from "react-countdown";
 import moment from "moment";
 import axios from "axios";
+import bluefiabi from "../../services/smart-contract/BLEUFINFT"
+import Web3 from "web3"
 // import { BigNumber } from "ethers";
 
 const breadcrumb = [
@@ -34,6 +36,13 @@ const breadcrumb = [
 ];
 
 function Item() {
+  const web3 = new Web3(Web3.givenProvider || window.etherum)
+  const newContract = "0xA20B92E0a08B6c32E81958A4955F138589C2084a"
+  const abiFile = bluefiabi.abi
+  const contractInstance = new web3.eth.Contract(abiFile,newContract)
+
+
+
   const { library, active, account } = useWeb3React();
   const { id } = useParams();
   const [price, setPrice] = useState(0);
@@ -75,6 +84,7 @@ function Item() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [newPrice, setNewPrice] = useState(item.price);
   const [saleType, setSaleType] = useState(item.saleType);
+  const [auction, setAction] = useState(false);
 
   const [chartOption] = useState({
     chart: {
@@ -249,6 +259,15 @@ function Item() {
             );
             await res.wait();
           }
+          let accounts = await web3.eth.getAccounts()
+          const hash = await contractInstance.methods.getMessageHash(
+            item.nonce,
+            parseUnits(newPrice.toString()),
+            item.tokenURI  
+          ).call()
+          const encodedhash = await contractInstance.methods.getEthSignedMessageHash(hash).call()
+          const signature = await web3.eth.sign(encodedhash, accounts[0])
+          console.log(signature)
           await firestore
             .collection("nfts")
             .doc(id)
@@ -256,12 +275,14 @@ function Item() {
               price: parseFloat(newPrice),
               saleType: "fix",
               isSale: true,
+              signature:signature,
               time: 0,
             });
           setItem({
             ...item,
             price: parseFloat(newPrice),
             saleType: "fix",
+            signature:signature,
             isSale: true,
             time: 0,
           });
@@ -308,6 +329,7 @@ function Item() {
       const userInfo = (
         await firestore.collection("users").doc(user_id).get()
       ).data();
+      setAction(true)
       dispatch({ type: "SET_PROFILE", userInfo });
       setUser(userInfo);
     }
@@ -317,7 +339,6 @@ function Item() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
-  console.log(parseUnits(item.price.toString()));
 
   const buyNft = async () => {
     if (active) {
@@ -333,16 +354,16 @@ function Item() {
           return;
         }
 
-        const contract = new Contract(
-          CONTRACT_ADDRESS,
-          Market_INFO.abi,
-          library.getSigner()
-        );
-        const nftContract = new Contract(
-          NFT_CONTRACT_ADDRESS,
-          NFT_INFO.abi,
-          library.getSigner()
-        );
+        // const contract = new Contract(
+        //   CONTRACT_ADDRESS,
+        //   Market_INFO.abi,
+        //   library.getSigner()
+        // );
+        // const nftContract = new Contract(
+        //   NFT_CONTRACT_ADDRESS,
+        //   NFT_INFO.abi,
+        //   library.getSigner()
+        // );
         const {
           tokenId,
           tokenURI,
@@ -353,17 +374,17 @@ function Item() {
           creator,
         } = item;
 
-        const isApproved = await nftContract.isApprovedForAll(
-          account,
-          NFT_MARKET_ADDRESS
-        );
-        if (!isApproved) {
-          const approve = await nftContract.setApprovalForAll(
-            NFT_MARKET_ADDRESS,
-            true
-          );
-          await approve.wait();
-        }
+        // const isApproved = await nftContract.isApprovedForAll(
+        //   account,
+        //   NFT_MARKET_ADDRESS
+        // );
+        // if (!isApproved) {
+        //   const approve = await nftContract.setApprovalForAll(
+        //     NFT_MARKET_ADDRESS,
+        //     true
+        //   );
+        //   await approve.wait();
+        // }
 
         // const approve = await nftContract.approve(
         //   CONTRACT_ADDRESS,
@@ -398,95 +419,84 @@ function Item() {
         // );
 
         if (tokenId === 0) {
-          if (paymentType === "BNB") {
-            console.log(
-              JSON.stringify({
-                tokenId,
-                creator,
-                price: parseUnits(price.toString()),
-                paymentType,
-                royalties,
-                tokenURI,
-                from: account,
-                value: parseUnits(price.toString()),
-              }),
-              null,
-              2
-            );
+        
+            // res = await contract.buyNew(
+            //   tokenId,
+            //   creator,
+            //   parseUnits(price.toString()),
+            //   paymentType,
+            //   royalties,
+            //   tokenURI,
+            //   { from: account, value: parseUnits(price.toString()) }
+            // );
+        const voucher = [item.nonce,parseUnits(price.toString()),item.tokenURI,item.signature,item.royalties]   
 
-            res = await contract.buyNew(
-              tokenId,
-              creator,
-              parseUnits(price.toString()),
-              paymentType,
-              royalties,
-              tokenURI,
-              { from: account, value: parseUnits(price.toString()) }
-            );
+        res = await contractInstance.methods.LazyMint(item.creator, voucher).send({from:account,value:parseUnits(price.toString())})
+            
             // res = await contract.buy(
             //   tokenId,
             //   parseUnits(price.toString()),
             //   paymentType,
             //   { from: account, value: parseUnits(price.toString()) }
             // );
-          } else {
-            const tokenContract = new Contract(
-              PAYMENT_TOKEN[paymentType].tokenAddress,
-              PAYMENT_TOKEN[paymentType].abi,
-              library.getSigner()
-            );
-            const approve = await tokenContract.approve(
-              NFT_CONTRACT_ADDRESS,
-              parseUnits(price.toString())
-            );
-            await approve.wait();
+          // else {
+          //   const tokenContract = new Contract(
+          //     PAYMENT_TOKEN[paymentType].tokenAddress,
+          //     PAYMENT_TOKEN[paymentType].abi,
+          //     library.getSigner()
+          //   );
+          //   const approve = await tokenContract.approve(
+          //     NFT_CONTRACT_ADDRESS,
+          //     parseUnits(price.toString())
+          //   );
+          //   await approve.wait();
 
-            res = await contract.buyNew(
-              tokenId,
-              creator,
-              parseUnits(price.toString()),
-              paymentType,
-              royalties,
-              tokenURI,
-              { from: account, value: parseUnits(price.toString()) }
-            );
-          }
-        } else {
-          if (paymentType === "BNB") {
-            res = await contract.buy(
-              tokenId,
-              parseUnits(price.toString()),
-              paymentType,
-              { from: account, value: parseUnits(price.toString()) }
-            );
-          } else {
-            const tokenContract = new Contract(
-              PAYMENT_TOKEN[paymentType].tokenAddress,
-              PAYMENT_TOKEN[paymentType].abi,
-              library.getSigner()
-            );
-            const approve = await tokenContract.approve(
-              NFT_MARKET_ADDRESS,
-              parseUnits(price.toString())
-            );
-            await approve.wait();
-            res = await contract.buy(
-              tokenId,
-              parseUnits(price.toString()),
-              paymentType,
-              { from: account, value: parseUnits(price.toString()) }
-            );
-          }
-        }
-
-        res
-          .wait()
-          .then(async (result) => {
-            console.log(result);
+          //   res = await contract.buyNew(
+          //     tokenId,
+          //     creator,
+          //     parseUnits(price.toString()),
+          //     paymentType,
+          //     royalties,
+          //     tokenURI,
+          //     { from: account, value: parseUnits(price.toString()) }
+          //   );
+          // }
+        } 
+        // else {
+        //   if (paymentType === "BNB") {
+        //     res = await contract.buy(
+        //       tokenId,
+        //       parseUnits(price.toString()),
+        //       paymentType,
+        //       { from: account, value: parseUnits(price.toString()) }
+        //     );
+        //   } 
+        //   else {
+        //     const tokenContract = new Contract(
+        //       PAYMENT_TOKEN[paymentType].tokenAddress,
+        //       PAYMENT_TOKEN[paymentType].abi,
+        //       library.getSigner()
+        //     );
+        //     const approve = await tokenContract.approve(
+        //       NFT_MARKET_ADDRESS,
+        //       parseUnits(price.toString())
+        //     );
+        //     await approve.wait();
+        //     res = await contract.buy(
+        //       tokenId,
+        //       parseUnits(price.toString()),
+        //       paymentType,
+        //       { from: account, value: parseUnits(price.toString()) }
+        //     );
+        //   }
+        // }
+        console.log("response============",res)
+        
+            
             let nftId = 0;
-            const events = result?.events;
+            const events = res?.events;
             if (events.length > 0) {
-              nftId = events[events.length - 1].args["nftID"].toString();
+              nftId = parseInt(events.Transfer[0].returnValues.tokenId)
             }
             await firestore
               .collection("nfts")
@@ -521,11 +531,11 @@ function Item() {
             setIsProcessing(false);
             setIsAccept(false);
             toast.success("You bought a NFT successfully");
-          })
-          .catch((err) => {
-            toast.error("Failed to Buy");
-            setIsProcessing(false);
-          });
+          // })
+          // .catch((err) => {
+          //   toast.error("Failed to Buy");
+          //   setIsProcessing(false);
+          // });
       } catch (err) {
         console.log(err);
         toast.error(
@@ -1214,7 +1224,7 @@ function Item() {
                 </div>
               </div>
               {/* <!-- actions --> */}
-              {isSale && (
+              {isSale && !(account==item.owner) && (
                 <>
                   <div className="sign__group filter__checkboxes mb-1 mt-5">
                     <input

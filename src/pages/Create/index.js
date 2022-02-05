@@ -18,10 +18,18 @@ import {NFT_ADDRESS, NFT_MARKET_ADDRESS, PaymentList} from "../../constants";
 import Market_INFO from "artifacts/contracts/Marketplace.sol/FlokinomicsNFTMarketplace.json";
 import NFT_INFO from "artifacts/contracts/FlokinomicsNFT.sol/FlokinomicsNFT.json";
 import {algolia} from "../../utils/algolia";
+import bluefiabi from "../../services/smart-contract/BLEUFINFT"
+import Web3 from "web3"
 
 const client = new NFTStorage({token: NFTStorageKey});
 
 function Create() {
+
+    const web3 = new Web3(Web3.givenProvider || window.etherum)
+    const newContract = "0xA20B92E0a08B6c32E81958A4955F138589C2084a"
+    const abiFile = bluefiabi.abi
+    const contractInstance = new web3.eth.Contract(abiFile,newContract)
+
     const {library, account} = useWeb3React();
     const [user, setUser] = useState({
         account: account,
@@ -56,6 +64,7 @@ function Create() {
 
     const history = useHistory();
     const dispatch = useDispatch();
+    
 
     const getFile = (file, isAttach = false) => {
         const reader = new FileReader();
@@ -88,10 +97,10 @@ function Create() {
                 toast.error("Please create your profile first.");
                 return;
             }
-            if (!isSale || (isSale && saleType === "fix"))
-                await library
-                    .getSigner(account)
-                    .signMessage("Please check this account is yours");
+            // if (!isSale || (isSale && saleType === "fix"))
+                // await library
+                //     .getSigner(account)
+                //     .signMessage("Please check this account is yours");
             if (account) {
                 setCreateProcess(true);
                 const result = await ipfs.files.add(Buffer.from(buffer));
@@ -137,94 +146,141 @@ function Create() {
                             );
                             await approve.wait();
                         }
-                        const res = await contract.createAuction(
-                            0,
-                            true,
-                            tokenURI,
-                            auction_length,
-                            parseUnits(price.toString()),
-                            paymentType,
-                            account
-                        );
-                        res
-                            .wait()
-                            .then(async (result) => {
-                                const events = result?.events;
-                                if (events.length > 0) {
-                                    const args = events[events.length - 1].args;
-                                    const ress = await firestore.collection("nfts").add({
-                                        tokenId: parseInt(args.tokenId),
-                                        tokenURI,
-                                        ownerAvatar:
-                                            user?.avatar || "/assets/img/avatars/avatar.jpg",
-                                        owner: account,
-                                        creator: account,
-                                        price: parseFloat(price),
-                                        isSale,
-                                        saleType: "auction",
-                                        paymentType: paymentType,
-                                        auctionLength: auction_length,
-                                        auctionCreator: account,
-                                        time:
-                                            (parseInt(args.duration) + parseInt(args.auctionStart)) *
-                                            1000,
-                                        likes: [],
-                                        created: moment().valueOf(),
-                                    });
-                                    if (ress?.id) {
-                                        algolia.saveObject({
-                                            objectID: ress?.id,
-                                            id: ress?.id,
-                                            tokenId: parseInt(args.tokenId),
-                                            tokenURI,
-                                            ownerAvatar:
-                                                user?.avatar || "/assets/img/avatars/avatar.jpg",
-                                            owner: account,
-                                            creator: account,
-                                            price: parseFloat(price),
-                                            isSale,
-                                            saleType: "auction",
-                                            paymentType: paymentType,
-                                            auctionLength: auction_length,
-                                            auctionCreator: account,
-                                            time:
-                                                (parseInt(args.duration) +
-                                                    parseInt(args.auctionStart)) *
-                                                1000,
-                                            likes: [],
-                                            created: moment().valueOf(),
-                                        });
-                                        firestore.collection("history").add({
-                                            userId: account,
-                                            oldUserId: account,
-                                            nftId: ress.id,
-                                            actionType: 0,
-                                            price: parseFloat(price),
-                                            paymentType: paymentType,
-                                            time: moment().valueOf(),
-                                        });
-                                        firestore.collection("history").add({
-                                            userId: account,
-                                            oldUserId: account,
-                                            nftId: ress.id,
-                                            actionType: 3,
-                                            price: parseFloat(price),
-                                            paymentType: paymentType,
-                                            time: moment().valueOf(),
-                                        });
-                                        toast.success("Create NFT and start auction");
-                                        setCreateProcess(false);
-                                        history.push(`/creator/${account}`);
-                                    } else {
-                                        setCreateProcess(false);
-                                        toast.error("Create failed.");
-                                    }
-                                }
-                            })
-                            .catch((err) => {
-                                toast.error("Create failed.");
-                            });
+                        // const res = await contract.createAuction(
+                        //     0,
+                        //     true,
+                        //     tokenURI,
+                        //     auction_length,
+                        //     parseUnits(price.toString()),
+                        //     paymentType,
+                        //     account
+                        // );
+                        // res
+                        //     .wait()
+                        //     .then(async (result) => {
+                        //         const events = result?.events;
+                        //         if (events.length > 0) {
+                        //             const args = events[events.length - 1].args;
+                        //             const ress = await firestore.collection("nfts").add({
+                        //                 tokenId: parseInt(args.tokenId),
+                        //                 tokenURI,
+                        //                 ownerAvatar:
+                        //                     user?.avatar || "/assets/img/avatars/avatar.jpg",
+                        //                 owner: account,
+                        //                 creator: account,
+                        //                 price: parseFloat(price),
+                        //                 isSale,
+                        //                 saleType: "auction",
+                        //                 paymentType: paymentType,
+                        //                 auctionLength: auction_length,
+                        //                 auctionCreator: account,
+                        //                 time:
+                        //                     (parseInt(args.duration) + parseInt(args.auctionStart)) *
+                        //                     1000,
+                        //                 likes: [],
+                        //                 created: moment().valueOf(),
+                        //             });
+                        //             if (ress?.id) {
+                        //                 algolia.saveObject({
+                        //                     objectID: ress?.id,
+                        //                     id: ress?.id,
+                        //                     tokenId: parseInt(args.tokenId),
+                        //                     tokenURI,
+                        //                     ownerAvatar:
+                        //                         user?.avatar || "/assets/img/avatars/avatar.jpg",
+                        //                     owner: account,
+                        //                     creator: account,
+                        //                     price: parseFloat(price),
+                        //                     isSale,
+                        //                     saleType: "auction",
+                        //                     paymentType: paymentType,
+                        //                     auctionLength: auction_length,
+                        //                     auctionCreator: account,
+                        //                     time:
+                        //                         (parseInt(args.duration) +
+                        //                             parseInt(args.auctionStart)) *
+                        //                         1000,
+                        //                     likes: [],
+                        //                     created: moment().valueOf(),
+                        //                 });
+                        //                 firestore.collection("history").add({
+                        //                     userId: account,
+                        //                     oldUserId: account,
+                        //                     nftId: ress.id,
+                        //                     actionType: 0,
+                        //                     price: parseFloat(price),
+                        //                     paymentType: paymentType,
+                        //                     time: moment().valueOf(),
+                        //                 });
+                        //                 firestore.collection("history").add({
+                        //                     userId: account,
+                        //                     oldUserId: account,
+                        //                     nftId: ress.id,
+                        //                     actionType: 3,
+                        //                     price: parseFloat(price),
+                        //                     paymentType: paymentType,
+                        //                     time: moment().valueOf(),
+                        //                 });
+                        //                 toast.success("Create NFT and start auction");
+                        //                 setCreateProcess(false);
+                        //                 history.push(`/creator/${account}`);
+                        //             } else {
+                        //                 setCreateProcess(false);
+                        //                 toast.error("Create failed.");
+                        //             }
+                        //         }
+                        //     })
+                        //     .catch((err) => {
+                        //         toast.error("Create failed.");
+                      
+                        //     });
                     } else {
+                       
+                            const resNonce = await firestore.collection("nonce").get();
+                            let variblelNonse = resNonce.docs[0].data().nonce;
+                            // const check = contractInstance.methods.mintedNonce(variblelNonse)
+                            // if(check){
+                            //     console.log("update nonce")
+                            // }
+                            variblelNonse= variblelNonse + 1
+
+                            console.log("&&&&&&&&&&&&&&&&&",variblelNonse)
+                            
+                            await firestore.collection("nonce").doc(resNonce.docs[0].id).update({
+                                nonce: variblelNonse})
+                            let accounts = await web3.eth.getAccounts()
+                            const hash = await contractInstance.methods.getMessageHash(
+                                variblelNonse,
+                              0,
+                              tokenURI  
+                            ).call()
+                            const encodedhash = await contractInstance.methods.getEthSignedMessageHash(hash).call()
+                            const signature = await web3.eth.sign(encodedhash, accounts[0])
+                            console.log(signature)
+
+                        await firestore.collection("newNFTs").add({
+                            tokenId: 0,
+                            tokenURI,
+                            ownerAvatar: user?.avatar || "/assets/img/avatars/avatar.jpg",
+                            owner: account,
+                            creator: account,
+                            price: parseFloat(price),
+                            paymentType: paymentType,
+                            isSale,
+                            saleType: "fix",
+                            auctionLength: 0,
+                            auctionCreator: null,
+                            time: 0,
+                            likes: [],
+                            created: moment().valueOf(),
+                            type,
+                            category,
+                            name,
+                            description,
+                            signature,
+                            nonce:variblelNonse,
+                            royalties
+                        });
                         const res = await firestore.collection("nfts").add({
                             tokenId: 0,
                             tokenURI,
@@ -244,7 +300,11 @@ function Create() {
                             category,
                             name,
                             description,
+                            signature,
+                            nonce:variblelNonse,
+                            royalties
                         });
+
                         if (res?.id) {
                             algolia.saveObject({
                                 objectID: res?.id,
